@@ -1,0 +1,69 @@
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { compare } from "bcryptjs";
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: "/sign-in",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    Credentials({
+      name: "credentials",
+      credentials: {
+        email: { label: "email", type: "text" },
+        password: { label: "password", type: "password" },
+      },
+      async authorize(credentials) {
+        const validateCredentials = z
+          .object({
+            email: z.string(),
+            password: z.string(),
+          })
+          .parse(credentials);
+
+        const user = await prisma.user.findUnique({
+          where: {
+            email: validateCredentials.email,
+          },
+        });
+
+        if (!user || !user.password) return null;
+
+        const passwordsMatch = await compare(
+          validateCredentials.password,
+          user.password,
+        );
+
+        if (passwordsMatch) return user;
+
+        console.log("Invalid credentials");
+        return null;
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.image = user.image;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.image = token.image as string;
+      }
+      return session;
+    },
+  },
+});
