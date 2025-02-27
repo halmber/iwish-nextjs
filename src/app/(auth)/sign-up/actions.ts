@@ -16,6 +16,15 @@ export async function signUpAction(data: SignUpSchemaType) {
 
   try {
     const { name, email, password } = parsed.data;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return { success: false, error: "User with this email already exists." };
+    }
+
     const hashedPassword = await hash(password, 10);
 
     const user = await prisma.user.create({
