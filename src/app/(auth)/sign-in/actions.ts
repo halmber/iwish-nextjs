@@ -2,27 +2,29 @@
 
 import { signIn } from "@/auth";
 import { redirect } from "next/navigation";
+import { signInSchema, SignInSchemaType } from "../schemas";
 
-export async function signInAction(formData: FormData) {
-  const email = formData.get("email");
-  const password = formData.get("password");
+export async function signInAction(data: SignInSchemaType) {
+  const parsed = signInSchema.safeParse(data);
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.toString(),
+    };
+  }
+
+  const { email, password } = parsed.data;
+
   try {
-    const response = await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-    console.log({ response });
+
+    return { success: true };
   } catch (error) {
-    // if (error instanceof AuthError) {
-    //   switch (error.type) {
-    //     case "CredentialsSignin":
-    //       return "Invalid credentials." as string;
-    //     default:
-    //       return "Something went wrong." as string;
-    //   }
-    // }
-    throw error;
+    return { success: false, error: `Invalid credentials: ${error}` };
   }
-  redirect("/");
 }
