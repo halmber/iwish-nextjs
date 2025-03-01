@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { ListCard } from "@/components/ListCard";
 import { SignOut } from "@/components/SignOutButton";
+import { ToggleThemeBtn } from "@/components/ToggleThemeBtn";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
@@ -18,6 +19,7 @@ export default async function Home() {
       <h1 className="text-4xl font-bold mb-8">Welcome to WishList App</h1>
 
       <p className="mb-4 text-2xl">Welcome, {session.user?.name}!</p>
+      <ToggleThemeBtn />
 
       <SignOut />
 
