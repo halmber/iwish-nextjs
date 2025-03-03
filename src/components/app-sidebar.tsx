@@ -28,7 +28,7 @@ const data = {
     },
     {
       title: "Lists",
-      url: "/",
+      url: "/lists",
       icon: List,
     },
     {
