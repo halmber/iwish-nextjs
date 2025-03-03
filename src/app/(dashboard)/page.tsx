@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { ListCard } from "@/components/ListCard";
-import { SignOut } from "@/components/SignOutButton";
+import { ListCard } from "@/app/(dashboard)/ListCard";
+import { SignOut } from "@/app/(dashboard)/SignOutButton";
 import { ToggleThemeBtn } from "@/components/ToggleThemeBtn";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";

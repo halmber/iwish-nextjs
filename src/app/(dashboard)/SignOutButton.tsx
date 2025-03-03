@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "./ui/button";
-import { signOutAction } from "@/app/actions";
+import { Button } from "@/components/ui/button";
+import { signOutAction } from "@/app/(dashboard)/actions";
 
 export function SignOut() {
   return (

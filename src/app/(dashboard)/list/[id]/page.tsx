@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { WishCard } from "@/components/WishCard";
+import { WishCard } from "./WishCard";
 import { auth } from "@/auth";
 
 export default async function ListPage({
