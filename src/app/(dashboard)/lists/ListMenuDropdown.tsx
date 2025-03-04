@@ -14,12 +14,8 @@ export default function ListMenuDropdown() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        asChild
-        className="hover:bg-secondary rounded-md"
-        onClick={(e) => e.stopPropagation()} // ! PROBLEM
-      >
-        <MoreVertical className="size-5" />
+      <DropdownMenuTrigger asChild className="hover:bg-secondary rounded-md">
+        <MoreVertical className="size-6" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side={isMobile ? "bottom" : "right"}
