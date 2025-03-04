@@ -23,14 +23,15 @@ async function main() {
               create: [
                 {
                   title: "New Laptop",
-                  desireLvl: 9,
+                  desireLvl: 5,
                   price: 1200,
                   currency: "USD",
                   description: "A powerful laptop for work and gaming",
+                  url: "https://rozetka.com.ua/ua/apple-mxcr3ua-a/p420781062/",
                 },
                 {
                   title: "Wireless Headphones",
-                  desireLvl: 7,
+                  desireLvl: 3,
                   price: 200,
                   currency: "USD",
                   description: "Noise-cancelling headphones for music",
