@@ -23,6 +23,7 @@ export default function DesireLevel({
             className="transition-transform hover:scale-110"
             onClick={() => setDesireLvl && setDesireLvl(level)}
             disabled={!setDesireLvl}
+            type="button"
           >
             <Heart
               size={20}
