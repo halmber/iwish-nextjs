@@ -42,6 +42,7 @@ import {
 import { currencies } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { editWishAction } from "./actions";
 
 interface EditWishDialogProps {
   wish: Wish;
@@ -68,7 +69,18 @@ export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
   });
 
   const onSubmit = async (values: WishSchemaType) => {
-    console.log(values);
+    const response = await editWishAction(values, wish.id);
+
+    if (response.success) {
+      toast({ title: "Wish edited successfully!" });
+      onClose();
+    } else {
+      toast({
+        title: "Failed editing wish",
+        description: response.error,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
