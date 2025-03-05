@@ -34,3 +34,20 @@ export async function editWishAction(data: WishSchemaType, id: string) {
     return { success: false, error: `Failed editing wish: ${error}` };
   }
 }
+
+export async function deleteWishAction(id: string) {
+  try {
+    // ! add ownerId checking
+    await prisma.wish.delete({
+      where: { id },
+    });
+
+    revalidatePath(`/lists/${id}`);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return { success: false, error: `Failed deleting wish: ${error}` };
+  }
+}

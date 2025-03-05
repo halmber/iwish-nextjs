@@ -7,6 +7,18 @@ import type { Wish } from "@prisma/client";
 import DesireLevel from "./DesireLevel";
 import { Link } from "lucide-react";
 import { EditWishDialog } from "./EditWishDialog";
+import { deleteWishAction } from "./actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface WishCardProps {
   wish: Wish;
@@ -51,7 +63,26 @@ export function WishCard({ wish, listId }: WishCardProps) {
 
         <div className="flex gap-4">
           <Button onClick={() => setIsEditing(true)}>Edit</Button>
-          <Button variant="destructive">Delete</Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">Delete</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your wish.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => deleteWishAction(wish.id)}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardContent>
 
