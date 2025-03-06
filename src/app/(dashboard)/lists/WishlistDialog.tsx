@@ -37,22 +37,20 @@ const visibilityOptions = [
 
 interface WishlistDialogProps {
   wishlist: List | null;
-  userId: string;
   onClose: () => void;
   onSubmitAction: (
-    data: any,
+    data: WishlistSchemaType,
     id: string,
   ) => Promise<{ success: boolean; error?: string }>;
 }
 
 export function WishlistDialog({
   wishlist = null,
-  userId,
   onClose,
   onSubmitAction,
 }: WishlistDialogProps) {
   const isEditing = !!wishlist;
-  const updateOrCreateEntityId = wishlist?.id || userId;
+  const updateOrCreateEntityId = wishlist?.id || "null";
 
   const form = useForm({
     resolver: zodResolver(wishlistSchema),

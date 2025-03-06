@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { ListCard } from "./ListCard";
+import CreateWishlistBtn from "./CreateWishlistBtn";
 
 export default async function Lists() {
   const session = await auth();
@@ -13,12 +14,22 @@ export default async function Lists() {
   });
 
   return (
-    <div className="container p-8 flex">
-      {lists.length === 0 ? (
-        <p>No lists found</p>
-      ) : (
-        lists.map((list) => <ListCard key={list.id} list={list} />)
-      )}
+    <div className="container p-8">
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-2xl font-bold mb-4">My wishlists</h1>
+        </div>
+
+        <CreateWishlistBtn />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {lists.length === 0 ? (
+          <p>No lists found</p>
+        ) : (
+          lists.map((list) => <ListCard key={list.id} list={list} />)
+        )}
+      </div>
     </div>
   );
 }

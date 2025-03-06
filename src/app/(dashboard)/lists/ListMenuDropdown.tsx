@@ -74,7 +74,6 @@ export default function ListMenuDropdown({ list }: { list: List }) {
       {isDialogOpen && (
         <WishlistDialog
           wishlist={list}
-          userId={list.userId}
           onClose={() => setIsDialogOpen(false)}
           onSubmitAction={editWishlistAction}
         />
