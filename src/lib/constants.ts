@@ -22,3 +22,8 @@ export const currencies = [
   { code: "SGD", symbol: "S$", name: "Singapore Dollar" },
   { code: "HKD", symbol: "HK$", name: "Hong Kong Dollar" },
 ] as const;
+
+export enum VISIBILITY {
+  PRIVATE = "private",
+  PUBLIC = "public",
+}

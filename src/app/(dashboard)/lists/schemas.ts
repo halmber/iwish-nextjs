@@ -1,3 +1,4 @@
+import { VISIBILITY } from "@/lib/constants";
 import { z } from "zod";
 
 export const wishSchema = z.object({
@@ -10,3 +11,10 @@ export const wishSchema = z.object({
   desiredGiftDate: z.date().nullable().optional(),
 });
 export type WishSchemaType = z.infer<typeof wishSchema>;
+
+export const wishlistSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  visibility: z.string(),
+});
+export type WishlistSchemaType = z.infer<typeof wishlistSchema>;

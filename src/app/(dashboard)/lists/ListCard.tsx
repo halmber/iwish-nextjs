@@ -10,6 +10,7 @@ import type { List, Wish } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Eye, EyeOff, ListChecks } from "lucide-react";
 import ListMenuDropdown from "./ListMenuDropdown";
+import { VISIBILITY } from "@/lib/constants";
 
 interface ListCardProps {
   list: List & { wishes: Wish[] };
@@ -34,7 +35,7 @@ export function ListCard({ list }: ListCardProps) {
 
       <CardContent className="-mt-2">
         <Badge variant="secondary">
-          {list.visibility === "public" ? (
+          {list.visibility === VISIBILITY.PUBLIC ? (
             <>
               <Eye className="size-4" />
               <span>public</span>
@@ -56,7 +57,7 @@ export function ListCard({ list }: ListCardProps) {
           </span>
         </div>
 
-        <ListMenuDropdown listId={list.id} />
+        <ListMenuDropdown list={list} />
       </CardFooter>
     </Card>
   );
