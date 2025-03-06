@@ -31,8 +31,11 @@ export default function ListMenuDropdown({ list }: { list: List }) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="hover:bg-secondary rounded-md">
-          <MoreVertical className="size-6" />
+        <DropdownMenuTrigger
+          asChild
+          className="hover:bg-secondary rounded-xl p-1"
+        >
+          <MoreVertical className="size-8" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side={isMobile ? "bottom" : "right"}
@@ -43,31 +46,32 @@ export default function ListMenuDropdown({ list }: { list: List }) {
             <span>Edit</span>
           </DropdownMenuItem>
 
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <div className="flex items-center gap-2">
-                  <Trash2 className="text-rose-500" size={16} />
-                  <span className="text-rose-500">Delete</span>
-                </div>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your wishlist.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => deleteListAction(list.id)}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenuItem>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <Trash2 className="text-rose-500" size={16} />
+                <span className="text-rose-500">Delete</span>
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your wishlist.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => deleteListAction(list.id)}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
 
