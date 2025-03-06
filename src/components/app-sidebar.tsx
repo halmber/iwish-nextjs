@@ -23,7 +23,7 @@ const data = {
     },
     {
       title: "Home",
-      url: "#",
+      url: "/",
       icon: Home,
     },
     {
