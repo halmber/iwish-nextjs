@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import type { Wish } from "@prisma/client";
 import DesireLevel from "./DesireLevel";
 import { Link } from "lucide-react";
-import { EditWishDialog } from "./EditWishDialog";
-import { deleteWishAction } from "./actions";
+import { WishDialog } from "../WishDialog";
+import { deleteWishAction, editWishAction } from "./actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,10 +87,11 @@ export function WishCard({ wish, listId }: WishCardProps) {
       </CardContent>
 
       {isEditing && (
-        <EditWishDialog
+        <WishDialog
           wish={wish}
-          listId={listId}
           onClose={() => setIsEditing(false)}
+          listId={listId}
+          onSubmitAction={editWishAction}
         />
       )}
     </Card>

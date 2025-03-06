@@ -7,6 +7,6 @@ export const wishSchema = z.object({
   currency: z.string().min(1, "Currency is required"),
   url: z.string().url("Invalid URL").optional().or(z.literal("")),
   description: z.string().max(500, "Description is too long").optional(),
-  desiredGiftDate: z.date().optional(),
+  desiredGiftDate: z.date().nullable().optional(),
 });
 export type WishSchemaType = z.infer<typeof wishSchema>;

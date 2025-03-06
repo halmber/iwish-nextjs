@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { Wish } from "@prisma/client";
-import DesireLevel from "./DesireLevel";
+import DesireLevel from "./[id]/DesireLevel";
 import {
   Form,
   FormControl,
@@ -42,34 +42,54 @@ import {
 import { currencies } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { editWishAction } from "./actions";
 
-interface EditWishDialogProps {
-  wish: Wish;
+interface WishDialogProps {
+  wish: Wish | null;
   listId: string;
   onClose: () => void;
+  onSubmitAction: (
+    data: WishSchemaType,
+    id: string,
+  ) => Promise<{ success: boolean; error?: string }>;
 }
 
-export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
+/**
+ * A dialog to create or edit a wish. Pass `null` for `wish` to create a new wish. Pass `wish` to edit an existing wish.
+ *
+ * @example
+ * <WishDialog wish={wish} listId={listId} onClose={onClose} onSubmitAction={editWishAction} />
+ *
+ * @example
+ * <WishDialog wish={null} listId={listId} onClose={onClose} onSubmitAction={createWishAction} />
+ */
+export function WishDialog({
+  wish = null,
+  listId,
+  onClose,
+  onSubmitAction,
+}: WishDialogProps) {
   const { toast } = useToast();
+  const isEditing = !!wish;
+  const updateOrCreateEntityId = wish?.id || listId;
 
   const form = useForm<WishSchemaType>({
     resolver: zodResolver(wishSchema),
     defaultValues: {
-      title: wish.title,
-      desireLvl: wish.desireLvl,
-      price: wish.price,
-      currency: wish.currency,
-      url: wish.url || "",
-      description: wish.description || "",
-      desiredGiftDate:
-        (wish.desiredGiftDate && new Date(wish.desiredGiftDate)) || undefined,
+      title: wish?.title || "",
+      desireLvl: wish?.desireLvl || 1,
+      price: wish?.price || 0,
+      currency: wish?.currency || "UAH",
+      url: wish?.url || "",
+      description: wish?.description || "",
+      desiredGiftDate: wish?.desiredGiftDate
+        ? new Date(wish.desiredGiftDate)
+        : undefined,
     },
     mode: "onTouched",
   });
 
   const onSubmit = async (values: WishSchemaType) => {
-    const response = await editWishAction(values, wish.id);
+    const response = await onSubmitAction(values, updateOrCreateEntityId);
 
     if (response.success) {
       toast({ title: "Wish edited successfully!" });
@@ -87,9 +107,11 @@ export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit wish</DialogTitle>
+          <DialogTitle>{isEditing ? "Edit wish" : "Create wish"}</DialogTitle>
           <DialogDescription>
-            Make changes to your wish here. Click save when you're done.
+            {isEditing
+              ? "Make changes to your wish here."
+              : "Fill in the details for your new wish."}
           </DialogDescription>
         </DialogHeader>
 
@@ -216,7 +238,7 @@ export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
               control={form.control}
               name="desiredGiftDate"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className="flex flex-col relative">
                   <FormLabel className="w-fit">Desired gift date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -241,12 +263,27 @@ export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        selected={
+                          field.value === null ? undefined : field.value
+                        }
                         onSelect={field.onChange}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    className="absolute top-1/2 -translate-y-1/2 right-1"
+                    onClick={() =>
+                      form.setValue("desiredGiftDate", null, {
+                        shouldValidate: true,
+                      })
+                    }
+                  >
+                    Clear
+                  </Button>
                   <FormMessage />
                 </FormItem>
               )}
@@ -272,7 +309,7 @@ export function EditWishDialog({ wish, listId, onClose }: EditWishDialogProps) {
               )}
             />
 
-            <Button type="submit">Save </Button>
+            <Button type="submit">{isEditing ? "Save" : "Create"}</Button>
           </form>
         </Form>
       </DialogContent>
