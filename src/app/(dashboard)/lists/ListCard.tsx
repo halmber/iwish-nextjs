@@ -56,7 +56,7 @@ export function ListCard({ list }: ListCardProps) {
           </span>
         </div>
 
-        <ListMenuDropdown />
+        <ListMenuDropdown listId={list.id} />
       </CardFooter>
     </Card>
   );
