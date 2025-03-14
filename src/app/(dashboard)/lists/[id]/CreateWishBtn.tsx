@@ -5,7 +5,7 @@ import { useState } from "react";
 import { WishDialog } from "../WishDialog";
 import { createWishAction } from "./actions";
 
-export default function CreateWishBtn({ listId }: { listId: string }) {
+export default function CreateWishBtn({ listId }: { listId?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>

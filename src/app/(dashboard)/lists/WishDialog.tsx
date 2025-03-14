@@ -42,10 +42,12 @@ import {
 import { currencies } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { getListsOptions } from "./actions";
 
 interface WishDialogProps {
   wish: Wish | null;
-  listId: string;
+  listId?: string;
   onClose: () => void;
   onSubmitAction: (
     data: WishSchemaType,
@@ -56,11 +58,13 @@ interface WishDialogProps {
 /**
  * A dialog to create or edit a wish. Pass `null` for `wish` to create a new wish. Pass `wish` to edit an existing wish.
  *
+ * For `listId`, pass the ID of the list if you are editing a wish. If creating a new wish, `listId` is not required.
+ *
  * @example
  * <WishDialog wish={wish} listId={listId} onClose={onClose} onSubmitAction={editWishAction} />
  *
  * @example
- * <WishDialog wish={null} listId={listId} onClose={onClose} onSubmitAction={createWishAction} />
+ * <WishDialog wish={null} onClose={onClose} onSubmitAction={createWishAction} />
  */
 export function WishDialog({
   wish = null,
@@ -69,12 +73,24 @@ export function WishDialog({
   onSubmitAction,
 }: WishDialogProps) {
   const { toast } = useToast();
-  const isEditing = !!wish;
-  const updateOrCreateEntityId = wish?.id || listId;
+  const isEditing = !!wish; // isEditing is true, so wish and listId are not null
+
+  const [lists, setLists] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    async function loadLists() {
+      const fetchedLists = await getListsOptions();
+      if (fetchedLists.success) {
+        setLists(fetchedLists.data);
+      }
+    }
+    loadLists();
+  }, []);
 
   const form = useForm<WishSchemaType>({
     resolver: zodResolver(wishSchema),
     defaultValues: {
+      listId,
       title: wish?.title || "",
       desireLvl: wish?.desireLvl || 1,
       price: wish?.price || 0,
@@ -89,7 +105,8 @@ export function WishDialog({
   });
 
   const onSubmit = async (values: WishSchemaType) => {
-    const response = await onSubmitAction(values, updateOrCreateEntityId);
+    const entityId = isEditing ? wish!.id : "";
+    const response = await onSubmitAction(values, entityId);
 
     if (response.success) {
       toast({ title: "Wish edited successfully!" });
@@ -117,6 +134,34 @@ export function WishDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="listId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select List</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a list" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {lists.map(({ id, name }) => (
+                        <SelectItem key={id} value={id} disabled={isEditing}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="title"

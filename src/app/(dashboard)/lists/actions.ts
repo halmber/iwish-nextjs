@@ -89,3 +89,35 @@ export async function deleteListAction(id: string) {
     return { success: false, error: `Failed deleting list: ${error}` };
   }
 }
+
+export async function getListsOptions() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return {
+      success: false,
+      error: "Unauthorized",
+      data: [],
+    };
+  }
+  try {
+    // ! add ownerId checking
+    const lists = await prisma.list.findMany({
+      where: { userId: session.user.id },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    return {
+      success: true,
+      data: lists,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: `Failed deleting list: ${error}`,
+      data: [],
+    };
+  }
+}

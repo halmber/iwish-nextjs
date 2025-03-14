@@ -54,7 +54,7 @@ export async function deleteWishAction(id: string) {
   }
 }
 
-export async function createWishAction(data: WishSchemaType, listId: string) {
+export async function createWishAction(data: WishSchemaType) {
   const { success, data: safeData, error } = wishSchema.safeParse(data);
 
   if (!success) {
@@ -70,11 +70,10 @@ export async function createWishAction(data: WishSchemaType, listId: string) {
       data: {
         ...safeData,
         desiredGiftDate: safeData?.desiredGiftDate?.toISOString(),
-        listId,
       },
     });
 
-    revalidatePath(`/lists/${listId}`);
+    revalidatePath(`/lists/${safeData.listId}`);
 
     return {
       success: true,

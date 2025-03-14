@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { ListCard } from "./ListCard";
 import CreateWishlistBtn from "./CreateWishlistBtn";
+import CreateWishBtn from "./[id]/CreateWishBtn";
 
 export default async function Lists() {
   const session = await auth();
@@ -19,8 +20,10 @@ export default async function Lists() {
         <div>
           <h1 className="text-2xl font-bold mb-4">My wishlists</h1>
         </div>
-
-        <CreateWishlistBtn />
+        <div className="flex gap-2">
+          <CreateWishlistBtn />
+          <CreateWishBtn />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
