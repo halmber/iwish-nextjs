@@ -10,7 +10,7 @@ export default async function Lists() {
 
   const lists = await prisma.list.findMany({
     where: { userId: session.user.id },
-    include: { wishes: true },
+    include: { wishes: false, _count: { select: { wishes: true } } },
   });
 
   return (

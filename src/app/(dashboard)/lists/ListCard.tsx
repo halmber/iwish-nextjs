@@ -13,11 +13,11 @@ import ListMenuDropdown from "./ListMenuDropdown";
 import { VISIBILITY } from "@/lib/constants";
 
 interface ListCardProps {
-  list: List & { wishes: Wish[] };
+  list: List & { _count: { wishes: number } };
 }
 
 export function ListCard({ list }: ListCardProps) {
-  const wishesLength = list.wishes.length;
+  const wishesLength = list._count.wishes;
 
   return (
     <Card className="max-w-[350px]">
