@@ -49,11 +49,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.image = user.image;
+      }
+      if (trigger === "update" && session?.name && session?.email) {
+        token.name = session.name;
+        token.email = session.email;
       }
       return token;
     },
