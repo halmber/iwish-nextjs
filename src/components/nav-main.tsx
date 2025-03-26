@@ -24,13 +24,15 @@ export function NavMain({
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={item.isActive}>
             <a href={item.url}>
-              <item.icon />
+              <div className="relative">
+                <item.icon className="size-5" />
+                {item.badge && (
+                  <span className="absolute -top-1 -right-1 flex h-4 min-w-3 items-center justify-center rounded-full bg-red-500 p-1 text-xs font-medium">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
               <span>{item.title}</span>
-              {item.badge && (
-                <span className="ml-auto rounded-full bg-red-500 px-2 py-0.5 text-xs font-medium">
-                  {item.badge}
-                </span>
-              )}
             </a>
           </SidebarMenuButton>
         </SidebarMenuItem>
