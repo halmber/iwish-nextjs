@@ -108,23 +108,23 @@ export function ProfileDialog({ onClose }: { onClose: () => void }) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex flex-col items-center justify-center mb-6">
-              <div className="relative h-24 w-24 rounded-full border overflow-hidden border-border">
+              <div className="relative h-24 w-24 rounded-full border border-border">
                 {previewImage ? (
                   <Image
                     src={previewImage || ""}
                     alt="Profile preview"
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-full"
                   />
                 ) : session?.user?.image ? (
                   <Image
                     src={session.user.image || ""}
                     alt="Profile picture"
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-full"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-muted">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                     <User className="h-12 w-12 text-muted-foreground" />
                   </div>
                 )}
@@ -132,7 +132,7 @@ export function ProfileDialog({ onClose }: { onClose: () => void }) {
                   htmlFor="image-upload"
                   className="absolute bottom-0 right-0 p-1 bg-primary rounded-full cursor-pointer"
                 >
-                  <Camera className="h-4 w-4 text-primary-foreground" />
+                  <Camera className="h-5 w-5 text-primary-foreground" />
                 </label>
                 <input
                   id="image-upload"
