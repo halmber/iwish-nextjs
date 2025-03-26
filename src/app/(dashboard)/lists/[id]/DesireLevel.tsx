@@ -21,7 +21,7 @@ export default function DesireLevel({
           <button
             key={level}
             className="transition-transform hover:scale-110"
-            onClick={() => setDesireLvl && setDesireLvl(level)}
+            {...(setDesireLvl && { onClick: () => setDesireLvl(level) })}
             disabled={!setDesireLvl}
             type="button"
           >

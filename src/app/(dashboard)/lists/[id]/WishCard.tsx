@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Wish } from "@prisma/client";
 import DesireLevel from "./DesireLevel";
-import { Link } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { WishDialog } from "../WishDialog";
 import { deleteWishAction, editWishAction } from "./actions";
 import {
@@ -40,7 +40,7 @@ export function WishCard({ wish, listId }: WishCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Link className="size-4" />
+                <ExternalLink className="size-4" />
               </a>
             )}
           </div>
