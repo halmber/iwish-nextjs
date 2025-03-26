@@ -33,14 +33,14 @@ const data = {
     },
     {
       title: "Friends",
-      url: "#",
+      url: "/friends",
       icon: Users,
     },
     {
       title: "Notification",
       url: "#",
       icon: Bell,
-      badge: "10",
+      badge: "1",
     },
   ],
   pinned: [

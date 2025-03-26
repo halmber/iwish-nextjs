@@ -1,14 +1,6 @@
 import { auth } from "@/auth";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ToggleThemeBtn } from "@/components/ToggleThemeBtn";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -29,6 +21,7 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider>
       <SessionProvider>
+        {/* !!pass the user to the sidebar and get it thanks to the react function cache!! */}
         <AppSidebar />
 
         <SidebarInset>
@@ -37,17 +30,6 @@ export default async function DashboardLayout({
               <div className="flex items-center gap-2 px-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator orientation="vertical" className="mr-2 h-4" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">Lists</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>My wishlist</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
               </div>
               <ToggleThemeBtn />
             </div>

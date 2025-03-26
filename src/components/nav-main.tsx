@@ -26,6 +26,11 @@ export function NavMain({
             <a href={item.url}>
               <item.icon />
               <span>{item.title}</span>
+              {item.badge && (
+                <span className="ml-auto rounded-full bg-red-500 px-2 py-0.5 text-xs font-medium">
+                  {item.badge}
+                </span>
+              )}
             </a>
           </SidebarMenuButton>
         </SidebarMenuItem>
