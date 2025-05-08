@@ -111,7 +111,7 @@ export default async function FriendProfilePage({
           {wishlists.length === 0 ? (
             <div className="text-center p-8 bg-muted rounded-lg">
               <p className="text-muted-foreground">
-                This user doesn't have any public wishlists.
+                This user doesn&apos;t have any public wishlists.
               </p>
             </div>
           ) : (

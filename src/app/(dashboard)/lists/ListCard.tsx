@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import type { List, Wish } from "@prisma/client";
+import type { List } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Eye, EyeOff, ListChecks } from "lucide-react";
 import ListMenuDropdown from "./ListMenuDropdown";

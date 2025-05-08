@@ -1,4 +1,3 @@
-import { VISIBILITY } from "@/lib/constants";
 import { z } from "zod";
 
 export const wishSchema = z.object({

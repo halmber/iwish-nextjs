@@ -1,7 +1,6 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { redirect } from "next/navigation";
 import { signInSchema, SignInSchemaType } from "../schemas";
 
 export async function signInAction(data: SignInSchemaType) {

@@ -57,6 +57,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         });
       }
     } catch (error) {
+      console.error("Error removing friend:", error);
       toast({
         title: "Error",
         description: "Failed to remove friend",
@@ -84,6 +85,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         });
       }
     } catch (error) {
+      console.error("Error accepting request:", error);
       toast({
         title: "Error",
         description: "Failed to accept friend request",
@@ -106,6 +108,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         });
       }
     } catch (error) {
+      console.error("Error declining request:", error);
       toast({
         title: "Error",
         description: "Failed to decline friend request",
@@ -129,7 +132,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         {localFriends.length === 0 ? (
           <div className="text-center p-8 bg-muted rounded-lg">
             <p className="text-muted-foreground">
-              You don't have any friends yet.
+              You don&apos;t have any friends yet.
             </p>
             <p className="text-muted-foreground">
               Search for users to add them as friends.
@@ -187,7 +190,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         {localRequests.length === 0 ? (
           <div className="text-center p-8 bg-muted rounded-lg">
             <p className="text-muted-foreground">
-              You don't have any pending friend requests.
+              You don&apos;t have any pending friend requests.
             </p>
           </div>
         ) : (

@@ -63,6 +63,7 @@ export async function updateProfile(data: ProfileFormSchemaType) {
 
     return { success: true, data: updatedUser };
   } catch (error) {
+    console.error("Error updating profile:", error);
     return {
       success: false,
       error: "Failed to update profile. Please try again.",
@@ -335,6 +336,7 @@ export async function removeFriend(friendId: string) {
     revalidatePath("/friends");
     return { success: true };
   } catch (error) {
+    console.error("Error removing friend:", error);
     return { error: "Failed to remove friend. Please try again." };
   }
 }
@@ -385,6 +387,7 @@ export async function getFriends() {
 
     return { success: true, friends };
   } catch (error) {
+    console.error("Error getting friends:", error);
     return { error: "Failed to get friends. Please try again." };
   }
 }
@@ -455,6 +458,7 @@ export async function searchUsers(query: string) {
 
     return { success: true, users: usersWithStatus };
   } catch (error) {
+    console.error("Error searching users:", error);
     return { error: "Failed to search users. Please try again." };
   }
 }

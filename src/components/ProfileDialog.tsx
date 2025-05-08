@@ -86,6 +86,7 @@ export function ProfileDialog({ onClose }: { onClose: () => void }) {
         onClose();
       }
     } catch (error) {
+      console.error("Error updating profile:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -102,7 +103,7 @@ export function ProfileDialog({ onClose }: { onClose: () => void }) {
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Update your profile information. Click save when you're done.
+            Update your profile information. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

@@ -26,7 +26,7 @@ interface NavUserProps {
   user?: User;
 }
 
-export function NavUser({ user }: NavUserProps) {
+export function NavUser({}: NavUserProps) {
   const { isMobile } = useSidebar();
   const [open, setOpen] = useState(false);
 

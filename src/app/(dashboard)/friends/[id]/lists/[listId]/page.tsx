@@ -91,7 +91,7 @@ export default async function FriendWishlistPage({
         <div>
           <h1 className="text-2xl font-bold">{list.name}</h1>
           <p className="text-muted-foreground">
-            {list.user.name || list.user.email}'s wishlist
+            {list.user.name || list.user.email}&apos;s wishlist
           </p>
         </div>
       </div>

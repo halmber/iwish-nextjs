@@ -48,6 +48,7 @@ export function UserSearch() {
         });
       }
     } catch (error) {
+      console.error("Error searching user:", error);
       toast({
         title: "Error",
         description: "Failed to search users",
@@ -83,6 +84,7 @@ export function UserSearch() {
         });
       }
     } catch (error) {
+      console.error("Error sending friend request:", error);
       toast({
         title: "Error",
         description: "Failed to send friend request",
@@ -138,6 +140,7 @@ export function UserSearch() {
         });
       }
     } catch (error) {
+      console.error("Error declining friend request:", error);
       toast({
         title: "Error",
         description: "Failed to decline friend request",
