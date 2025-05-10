@@ -75,7 +75,7 @@ export function NavUser({}: NavUserProps) {
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
-      {open && <ProfileDialog onClose={() => setOpen(false)} />}
+      <ProfileDialog open={open} onClose={() => setOpen((prev) => !prev)} />
     </>
   );
 }
