@@ -32,7 +32,13 @@ import {
 } from "../app/(dashboard)/schemas";
 import { updateProfile } from "../app/(dashboard)/actions";
 
-export function ProfileDialog({ onClose }: { onClose: () => void }) {
+export function ProfileDialog({
+  onClose,
+  open,
+}: {
+  onClose: () => void;
+  open: boolean;
+}) {
   const { data: session, update } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -98,7 +104,7 @@ export function ProfileDialog({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
