@@ -4,6 +4,7 @@ import { profileFormSchema, ProfileFormSchemaType } from "./schemas";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { FriendshipStatus } from "@prisma/client";
+import { getPublicAvatarUrl } from "@/lib/supabase/client";
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/" });
@@ -37,27 +38,13 @@ export async function updateProfile(data: ProfileFormSchemaType) {
       return { success: false, error: "Email is already taken." };
     }
 
-    // Handle image upload if provided
-    // let imageUrl = undefined;
-    // const image = formData.get("image") as File;
-
-    // if (image && image.size > 0) {
-    //   try {
-    //     const blob = await uploadToBlob(image);
-    //     imageUrl = blob.url;
-    //   } catch (error) {
-    //     console.error("Error uploading image:", error);
-    //     return { error: "Failed to upload image. Please try again." };
-    //   }
-    // }
-
     // Update the user profile
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: {
         name: parsed.data.name,
         email: parsed.data.email,
-        // ...(imageUrl && { image: imageUrl }),
+        ...(parsed.data.avatar && { image: parsed.data.avatar }),
       },
     });
 

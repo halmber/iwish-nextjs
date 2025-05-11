@@ -7,6 +7,7 @@ export const profileFormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
+  avatar: z.any().optional(),
 });
 
 export type ProfileFormSchemaType = z.infer<typeof profileFormSchema>;

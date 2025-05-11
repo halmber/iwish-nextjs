@@ -59,6 +59,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = session.name;
         token.email = session.email;
       }
+      if (trigger === "update" && session?.image) {
+        token.image = session.image;
+      }
       return token;
     },
     async session({ session, token }) {
