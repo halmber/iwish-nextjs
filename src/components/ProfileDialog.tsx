@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
@@ -31,6 +31,7 @@ import {
   ProfileFormSchemaType,
 } from "../app/(dashboard)/schemas";
 import { updateProfile } from "../app/(dashboard)/actions";
+import { fileUploadService } from "@/lib/fileUploadService";
 
 export function ProfileDialog({
   onClose,
@@ -48,10 +49,19 @@ export function ProfileDialog({
   const form = useForm<ProfileFormSchemaType>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      name: session?.user?.name || "",
-      email: session?.user?.email || "",
+      name: session?.user?.name!,
+      email: session?.user?.email!,
     },
   });
+
+  useEffect(() => {
+    if (session?.user) {
+      form.reset({
+        name: session.user.name ?? "",
+        email: session.user.email ?? "",
+      });
+    }
+  }, [session, form]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,12 +78,12 @@ export function ProfileDialog({
     setIsSubmitting(true);
 
     try {
-      // Add the image if one was selected
-      // if (fileInputRef.current?.files?.[0]) {
-      //   formData.append("image", fileInputRef.current.files[0]);
-      // }
+      const imgPath = await fileUploadService.uploadAvatar(
+        fileInputRef.current?.files?.[0]!,
+        session?.user?.id!,
+      );
 
-      const result = await updateProfile(data);
+      const result = await updateProfile({ ...data, avatar: imgPath });
 
       if (result.error) {
         toast({
@@ -83,7 +93,7 @@ export function ProfileDialog({
         });
       } else if (result.success) {
         // Update the session to reflect the changes
-        update({ ...data });
+        update({ ...data, image: imgPath });
 
         toast({
           title: "Profile updated",

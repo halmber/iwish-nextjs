@@ -27,3 +27,8 @@ export enum VISIBILITY {
   PRIVATE = "private",
   PUBLIC = "public",
 }
+
+export enum BUCKETS {
+  AVATARS="avatars",
+  IMAGES="images",
+}
