@@ -20,7 +20,8 @@ import { User } from "next-auth";
 import UserAvatarItem from "./user-avatar-item";
 import { signOutAction } from "@/app/(dashboard)/actions";
 import { ProfileDialog } from "@/components/ProfileDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface NavUserProps {
   user?: User;
@@ -29,6 +30,13 @@ interface NavUserProps {
 export function NavUser({}: NavUserProps) {
   const { isMobile } = useSidebar();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const { data: session } = useSession();
+  useEffect(() => {
+    if (session?.user) {
+      setUser(session.user);
+    }
+  }, [session]);
 
   return (
     <>
@@ -40,7 +48,7 @@ export function NavUser({}: NavUserProps) {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <UserAvatarItem />
+                <UserAvatarItem user={user} />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -51,7 +59,7 @@ export function NavUser({}: NavUserProps) {
             >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <UserAvatarItem showChevron={false} />
+                  <UserAvatarItem user={user} showChevron={false} />
                 </div>
               </DropdownMenuLabel>
 
@@ -75,7 +83,11 @@ export function NavUser({}: NavUserProps) {
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
-      <ProfileDialog open={open} onClose={() => setOpen((prev) => !prev)} />
+      <ProfileDialog
+        user={user}
+        open={open}
+        onClose={() => setOpen((prev) => !prev)}
+      />
     </>
   );
 }

@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { User, Camera } from "lucide-react";
+import { User, Camera, Loader2 } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,45 +33,69 @@ import {
 } from "../app/(dashboard)/schemas";
 import { updateProfile } from "../app/(dashboard)/actions";
 import { fileUploadService } from "@/lib/fileUploadService";
+import { User as UserType } from "next-auth";
 
 export function ProfileDialog({
   onClose,
   open,
+  user,
 }: {
   onClose: () => void;
   open: boolean;
+  user: UserType | null;
 }) {
-  const { data: session, update } = useSession();
+  const { update } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [compressedFile, setCompressedFile] = useState<File | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ProfileFormSchemaType>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      name: session?.user?.name!,
-      email: session?.user?.email!,
+      name: user?.name!,
+      email: user?.email!,
     },
   });
 
   useEffect(() => {
-    if (session?.user) {
+    if (user) {
       form.reset({
-        name: session.user.name ?? "",
-        email: session.user.email ?? "",
+        name: user.name ?? "",
+        email: user.email ?? "",
       });
     }
-  }, [session, form]);
+  }, [user, form]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+
+    if (!file) return;
+
+    setIsCompressing(true);
+    try {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 512,
+        useWebWorker: true,
+      });
+      setCompressedFile(compressed);
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
+    } catch (err) {
+      console.error("Compression failed", err);
+      toast({
+        title: "Image compression failed",
+        description: "Please try a different image.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCompressing(false);
     }
   };
 
@@ -79,8 +104,8 @@ export function ProfileDialog({
 
     try {
       const imgPath = await fileUploadService.uploadAvatar(
-        fileInputRef.current?.files?.[0]!,
-        session?.user?.id!,
+        compressedFile!,
+        user?.id!,
       );
 
       const result = await updateProfile({ ...data, avatar: imgPath });
@@ -133,9 +158,9 @@ export function ProfileDialog({
                     fill
                     className="object-cover rounded-full"
                   />
-                ) : session?.user?.image ? (
+                ) : user?.image ? (
                   <Image
-                    src={session.user.image || ""}
+                    src={user.image || ""}
                     alt="Profile picture"
                     fill
                     className="object-cover rounded-full"
@@ -143,6 +168,11 @@ export function ProfileDialog({
                 ) : (
                   <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                     <User className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                )}
+                {isCompressing && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full z-10">
+                    <Loader2 className="h-6 w-6 animate-spin text-white" />
                   </div>
                 )}
                 <label
@@ -155,7 +185,6 @@ export function ProfileDialog({
                   id="image-upload"
                   type="file"
                   accept="image/*"
-                  ref={fileInputRef}
                   onChange={handleImageChange}
                   className="sr-only"
                 />
@@ -197,8 +226,15 @@ export function ProfileDialog({
             />
 
             <DialogFooter>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save changes"}
+              <Button type="submit" disabled={isSubmitting || isCompressing}>
+                {isSubmitting || isCompressing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save changes"
+                )}
               </Button>
             </DialogFooter>
           </form>

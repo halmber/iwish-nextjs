@@ -2,27 +2,30 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronsUpDown } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { UserAvatarSkeleton } from "./nav-skeleton";
+import { User } from "next-auth";
 
 interface UserAvatarItemProps {
   showChevron?: boolean;
+  user: User | null;
 }
 
 export default function UserAvatarItem({
   showChevron = true,
+  user,
 }: UserAvatarItemProps) {
-  const { data: session } = useSession();
-  const user = session?.user;
-
   if (!user) return <UserAvatarSkeleton />;
 
   return (
     <>
       <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarImage src={user.image || ""} alt={user.name || "User image"} />
+        <AvatarImage
+          className=" object-cover"
+          src={user.image || ""}
+          alt={user.name || "User image"}
+        />
         <AvatarFallback className="rounded-lg">
-          {user?.name
+          {user.name
             ?.split(" ")
             .map((n) => n[0].toLocaleUpperCase())
             .join("")}

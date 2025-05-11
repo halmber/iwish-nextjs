@@ -36,9 +36,10 @@ class FileUploadServiceImpl {
   // Uploads a file to Supabase storage if in production
   // and returns the public URL of the uploaded file
   private async uploadToSupabase(file: File, userId: string): Promise<string> {
-    const path = `${userId}/avatar`;
+    const path = `${userId}/${crypto.randomUUID()}-${file.name}`;
     const options = {
       cacheControl: "3600",
+      maxWidthOrHeight: 512,
       upsert: true,
     };
 
