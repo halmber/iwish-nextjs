@@ -13,9 +13,10 @@ class FileUploadServiceImpl {
     return await this.uploadFn(file, userId);
   }
 
-  private async uploadLocal(file: File, _userId: string): Promise<string> {
+  private async uploadLocal(file: File, userId: string): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("userId", userId);
 
     const res = await fetch("/api/upload-avatar-local", {
       method: "POST",
@@ -25,7 +26,7 @@ class FileUploadServiceImpl {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to upload locally");
 
-    return data.path; // e.g., "/uploads/filename.jpg"
+    return data.path; // e.g., "/avatars/<userId>/filename.jpg"
   }
 
   private getStorage() {

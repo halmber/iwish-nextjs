@@ -184,7 +184,7 @@ export function ProfileDialog({
                 <input
                   id="image-upload"
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp,image/svg+xml"
                   onChange={handleImageChange}
                   className="sr-only"
                 />
@@ -230,7 +230,7 @@ export function ProfileDialog({
                 {isSubmitting || isCompressing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    Loading...
                   </>
                 ) : (
                   "Save changes"
