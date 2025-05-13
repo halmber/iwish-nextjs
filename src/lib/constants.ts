@@ -29,6 +29,6 @@ export enum VISIBILITY {
 }
 
 export enum BUCKETS {
-  AVATARS="avatars",
-  IMAGES="images",
+  AVATARS = "avatars",
+  IMAGES = "wish-images",
 }

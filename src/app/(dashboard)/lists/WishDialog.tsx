@@ -39,11 +39,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { currencies } from "@/lib/constants";
+import { BUCKETS, currencies } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { getListsOptions } from "./actions";
+import imageCompression from "browser-image-compression";
+import { ImageUploader } from "@/components/ImageUploader";
+import { fileUploadService } from "@/lib/fileUploadService";
+import { useSession } from "next-auth/react";
 
 interface WishDialogProps {
   wish: Wish | null;
@@ -73,7 +77,10 @@ export function WishDialog({
   onSubmitAction,
 }: WishDialogProps) {
   const { toast } = useToast();
+  const { data: session } = useSession();
   const isEditing = !!wish; // isEditing is true, so wish and listId are not null
+  const [compressedFile, setCompressedFile] = useState<File | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const [lists, setLists] = useState<{ id: string; name: string }[]>([]);
 
@@ -100,13 +107,23 @@ export function WishDialog({
       desiredGiftDate: wish?.desiredGiftDate
         ? new Date(wish.desiredGiftDate)
         : undefined,
+      imageUrl: wish?.imageUrl || "",
     },
     mode: "onTouched",
   });
 
   const onSubmit = async (values: WishSchemaType) => {
     const entityId = isEditing ? wish!.id : "";
-    const response = await onSubmitAction(values, entityId);
+    const imageUrl =
+      compressedFile && session?.user?.id
+        ? await fileUploadService.uploadFile(
+            compressedFile,
+            session.user.id,
+            BUCKETS.IMAGES,
+          )
+        : values.imageUrl;
+
+    const response = await onSubmitAction({ ...values, imageUrl }, entityId);
 
     if (response.success) {
       toast({ title: "Wish edited successfully!" });
@@ -134,6 +151,12 @@ export function WishDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <ImageUploader
+              onCompressed={(file) => setCompressedFile(file)}
+              isCompressing={isCompressing}
+              setIsCompressing={setIsCompressing}
+            />
+
             <FormField
               control={form.control}
               name="listId"
@@ -193,52 +216,56 @@ export function WishDialog({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="The price of wish."
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="currency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select currency" />
-                      </SelectTrigger>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="The price of wish."
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {currencies.map(({ code, name }) => (
-                        <SelectItem key={code} value={code}>
-                          {code}{" "}
-                          <span className="text-muted-foreground">{name}</span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Currency</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select currency" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {currencies.map(({ code, name }) => (
+                          <SelectItem key={code} value={code}>
+                            {code}{" "}
+                            <span className="text-muted-foreground">
+                              {name}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -354,7 +381,9 @@ export function WishDialog({
               )}
             />
 
-            <Button type="submit">{isEditing ? "Save" : "Create"}</Button>
+            <Button disabled={isCompressing} type="submit">
+              {isEditing ? "Save" : "Create"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

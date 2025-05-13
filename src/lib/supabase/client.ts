@@ -7,6 +7,6 @@ export function createClient() {
   );
 }
 
-export function getPublicAvatarUrl(path: string) {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
+export function getPublicStorageUrl(bucket: string, path: string) {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }

@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Image from "next/image";
 
 interface WishCardProps {
   wish: Wish;
@@ -30,6 +31,14 @@ export function WishCard({ wish, listId }: WishCardProps) {
 
   return (
     <Card>
+      {wish.imageUrl && (
+        <Image
+          src={wish.imageUrl}
+          alt={wish.title}
+          height={160}
+          className="w-full h-40 object-contain rounded-t-xl"
+        />
+      )}
       <CardHeader>
         <CardTitle className="flex justify-between">
           <div className="flex items-center gap-4">

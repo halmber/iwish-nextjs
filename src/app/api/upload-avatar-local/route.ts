@@ -5,8 +5,6 @@ import path from "path";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const uploadDir = path.join(process.cwd(), "public", "avatars");
-
 function getExtensionFromMime(mimeType: string): string {
   const map: Record<string, string> = {
     "image/jpeg": ".jpg",
@@ -22,6 +20,9 @@ async function parseForm(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("file") as File;
   const userId = formData.get("userId") as string;
+  const bucket = formData.get("bucket") as string;
+
+  const uploadDir = path.join(process.cwd(), "public", bucket);
 
   if (!file || !userId) {
     throw new Error("Missing file or userId");
@@ -38,7 +39,7 @@ async function parseForm(req: NextRequest) {
   fs.mkdirSync(userFolder, { recursive: true });
   fs.writeFileSync(filePath, buffer);
 
-  const publicPath = `/avatars/${userId}/${uniqueName}`;
+  const publicPath = `/${bucket}/${userId}/${uniqueName}`;
   return { path: publicPath };
 }
 
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
   try {
     const { path } = await parseForm(req);
     return NextResponse.json({ path });
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("Upload error:", err);
     return NextResponse.json(
