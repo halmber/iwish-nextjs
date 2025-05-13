@@ -96,6 +96,7 @@ model List {
 model Wish {
   id              String  @id @default(cuid())
   title           String
+  imageUrl        String? @default("/defaultWishImg.png")
   desireLvl       Int
   price           Float
   currency        String

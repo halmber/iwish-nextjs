@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
@@ -34,6 +34,7 @@ import {
 import { updateProfile } from "../app/(dashboard)/actions";
 import { fileUploadService } from "@/lib/fileUploadService";
 import { User as UserType } from "next-auth";
+import { BUCKETS } from "@/lib/constants";
 
 export function ProfileDialog({
   onClose,
@@ -103,9 +104,10 @@ export function ProfileDialog({
     setIsSubmitting(true);
 
     try {
-      const imgPath = await fileUploadService.uploadAvatar(
+      const imgPath = await fileUploadService.uploadFile(
         compressedFile!,
         user?.id!,
+        BUCKETS.AVATARS,
       );
 
       const result = await updateProfile({ ...data, avatar: imgPath });

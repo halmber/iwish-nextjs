@@ -4,7 +4,6 @@ import { profileFormSchema, ProfileFormSchemaType } from "./schemas";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { FriendshipStatus } from "@prisma/client";
-import { getPublicAvatarUrl } from "@/lib/supabase/client";
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/" });

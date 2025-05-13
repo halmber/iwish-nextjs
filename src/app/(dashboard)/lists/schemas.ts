@@ -9,6 +9,7 @@ export const wishSchema = z.object({
   url: z.string().url("Invalid URL").optional().or(z.literal("")),
   description: z.string().max(500, "Description is too long").optional(),
   desiredGiftDate: z.date().nullable().optional(),
+  imageUrl: z.string().optional(),
 });
 export type WishSchemaType = z.infer<typeof wishSchema>;
 

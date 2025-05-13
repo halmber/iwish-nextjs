@@ -13,6 +13,7 @@
 # testing
 /coverage
 public/avatars/
+public/wish-images/
 
 # next.js
 /.next/
