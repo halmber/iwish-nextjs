@@ -27,11 +27,23 @@ export async function signUpAction(data: SignUpSchemaType) {
 
     const hashedPassword = await hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: {
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
         name,
         email,
         password: hashedPassword,
+        lists: {
+          create: [
+            {
+              name: "My Wishlist",
+              type: "wishlist",
+              description: "My wishes",
+              visibility: "public",
+            },
+          ],
+        },
       },
     });
 
