@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
   try {
     const { path } = await parseForm(req);
     return NextResponse.json({ path });
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("Upload error:", err);
     return NextResponse.json(
