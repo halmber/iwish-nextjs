@@ -140,7 +140,7 @@ export function WishDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Edit wish" : "Create wish"}</DialogTitle>
           <DialogDescription>
