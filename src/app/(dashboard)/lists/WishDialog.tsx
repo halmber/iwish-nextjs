@@ -39,12 +39,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BUCKETS, currencies } from "@/lib/constants";
+import { BUCKETS, currencies, DEFAULT_IMAGE_URL } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { getListsOptions } from "./actions";
-import imageCompression from "browser-image-compression";
 import { ImageUploader } from "@/components/ImageUploader";
 import { fileUploadService } from "@/lib/fileUploadService";
 import { useSession } from "next-auth/react";
@@ -114,27 +113,29 @@ export function WishDialog({
 
   const onSubmit = async (values: WishSchemaType) => {
     const entityId = isEditing ? wish!.id : "";
+    const userId = session?.user?.id!;
+
     const imageUrl =
-      compressedFile && session?.user?.id
+      compressedFile && userId
         ? await fileUploadService.uploadFile(
             compressedFile,
-            session.user.id,
+            userId,
             BUCKETS.IMAGES,
           )
         : values.imageUrl;
 
-    const response = await onSubmitAction({ ...values, imageUrl }, entityId);
+    const { success, error } = await onSubmitAction(
+      { ...values, imageUrl },
+      entityId,
+    );
 
-    if (response.success) {
-      toast({ title: "Wish edited successfully!" });
-      onClose();
-    } else {
-      toast({
-        title: "Failed editing wish",
-        description: response.error,
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: success ? "Wish edited successfully!" : "Failed editing wish",
+      description: success ? undefined : error,
+      variant: success ? undefined : "destructive",
+    });
+
+    if (success) onClose();
   };
 
   return (
@@ -153,6 +154,12 @@ export function WishDialog({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <ImageUploader
               onCompressed={(file) => setCompressedFile(file)}
+              imageUrl={form.watch("imageUrl") as string}
+              deleteImage={() => {
+                setCompressedFile(null);
+                form.setValue("imageUrl", DEFAULT_IMAGE_URL);
+                setIsCompressing(false);
+              }}
               isCompressing={isCompressing}
               setIsCompressing={setIsCompressing}
             />

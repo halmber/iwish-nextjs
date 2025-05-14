@@ -32,3 +32,5 @@ export enum BUCKETS {
   AVATARS = "avatars",
   IMAGES = "wish-images",
 }
+
+export const DEFAULT_IMAGE_URL = "/defaultWishImg.png";
