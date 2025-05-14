@@ -32,12 +32,15 @@ export function WishCard({ wish, listId }: WishCardProps) {
   return (
     <Card>
       {wish.imageUrl && (
-        <Image
-          src={wish.imageUrl}
-          alt={wish.title}
-          height={160}
-          className="w-full h-40 object-contain rounded-t-xl"
-        />
+        <div className="relative w-full h-40 rounded-t-xl">
+          <Image
+            src={wish.imageUrl}
+            alt={wish.title}
+            fill
+            sizes="100%"
+            className="object-contain rounded-t-xl"
+          />
+        </div>
       )}
       <CardHeader>
         <CardTitle className="flex justify-between">
