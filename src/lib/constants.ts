@@ -34,3 +34,9 @@ export enum BUCKETS {
 }
 
 export const DEFAULT_IMAGE_URL = "/defaultWishImg.png";
+
+export enum FRIENDS_TABS {
+  FRIENDS = "friends",
+  REQUESTS = "requests",
+  SENT = "sent",
+}

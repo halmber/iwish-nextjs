@@ -19,6 +19,8 @@ import {
   removeFriend,
 } from "../actions";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { FRIENDS_TABS } from "@/lib/constants";
 
 interface FriendUser {
   id: string;
@@ -38,10 +40,16 @@ interface FriendsListProps {
 }
 
 export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
-  const [activeTab, setActiveTab] = useState("friends");
   const [localFriends, setLocalFriends] = useState(friends);
   const [localRequests, setLocalRequests] = useState(pendingRequests);
   const { toast } = useToast();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const tabFromUrl = searchParams.get("tab") ?? FRIENDS_TABS.FRIENDS;
+  const [activeTab, setActiveTab] = useState(tabFromUrl);
 
   const handleRemoveFriend = async (friendId: string) => {
     try {
@@ -118,9 +126,18 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
   };
 
   return (
-    <Tabs defaultValue="friends" value={activeTab} onValueChange={setActiveTab}>
+    <Tabs
+      defaultValue={FRIENDS_TABS.FRIENDS}
+      value={activeTab}
+      onValueChange={(tab) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("tab", tab);
+        router.replace(`${pathname}?${params.toString()}`);
+        setActiveTab(tab);
+      }}
+    >
       <TabsList className="mb-4">
-        <TabsTrigger value="friends">
+        <TabsTrigger value={FRIENDS_TABS.FRIENDS}>
           Friends ({localFriends.length})
         </TabsTrigger>
         <TabsTrigger value="requests">
@@ -128,7 +145,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="friends">
+      <TabsContent value={FRIENDS_TABS.FRIENDS}>
         {localFriends.length === 0 ? (
           <div className="text-center p-8 bg-muted rounded-lg">
             <p className="text-muted-foreground">
@@ -186,7 +203,7 @@ export function FriendsList({ friends, pendingRequests }: FriendsListProps) {
         )}
       </TabsContent>
 
-      <TabsContent value="requests">
+      <TabsContent value={FRIENDS_TABS.REQUESTS}>
         {localRequests.length === 0 ? (
           <div className="text-center p-8 bg-muted rounded-lg">
             <p className="text-muted-foreground">
