@@ -22,12 +22,14 @@ import { signOutAction } from "@/app/(dashboard)/actions";
 import { ProfileDialog } from "@/components/ProfileDialog";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface NavUserProps {
   user?: User;
+  ntfBadge: string | null;
 }
 
-export function NavUser({}: NavUserProps) {
+export function NavUser({ ntfBadge }: NavUserProps) {
   const { isMobile } = useSidebar();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -69,10 +71,23 @@ export function NavUser({}: NavUserProps) {
                   <UserIcon />
                   Account
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Bell />
-                  Notifications
-                </DropdownMenuItem>
+                <Link
+                  href="/notifications"
+                  className="flex items-center gap-2 w-full"
+                >
+                  <DropdownMenuItem className="w-full">
+                    <div className="relative">
+                      <Bell size={16} />
+                      {ntfBadge && ntfBadge != "0" && (
+                        <span className="absolute -top-1 -right-1 flex h-3 min-w-2 items-center justify-center rounded-full bg-red-500 p-1 text-xs font-medium">
+                          {+ntfBadge < 100 ? ntfBadge : "99+"}
+                        </span>
+                      )}
+                    </div>
+
+                    <span>Notifications</span>
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={signOutAction}>

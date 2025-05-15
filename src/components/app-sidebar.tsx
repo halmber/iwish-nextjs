@@ -49,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavPinned pinned={data.pinned} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavUser ntfBadge={notificationCount} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
