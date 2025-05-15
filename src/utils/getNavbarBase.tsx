@@ -4,7 +4,7 @@ export const getNavbarBase = (notificationCount: string) => {
   return {
     navMain: [
       {
-        title: "Search",
+        title: "Search (comming soon)",
         url: "#",
         icon: Search,
       },
