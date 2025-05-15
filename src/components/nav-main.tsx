@@ -26,7 +26,7 @@ export function NavMain({
             <a href={item.url}>
               <div className="relative">
                 <item.icon className="size-5" />
-                {item.badge && (
+                {item.badge && item.badge != "0" && (
                   <span className="absolute -top-1 -right-1 flex h-4 min-w-3 items-center justify-center rounded-full bg-red-500 p-1 text-xs font-medium">
                     {item.badge}
                   </span>

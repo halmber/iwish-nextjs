@@ -59,12 +59,13 @@ enum NotificationType {
 model Notifications {
   id           String      @id @default(cuid())
   notifiedId   String
-  notified     User        @relation("NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
   notifierId   String
-  notifier     User        @relation("NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
   type         NotificationType      
   read         Boolean     @default(false)
   createdAt    DateTime    @default(now())
+
+  notified     User        @relation("NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
+  notifier     User        @relation("NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
 }
 
 model Account {

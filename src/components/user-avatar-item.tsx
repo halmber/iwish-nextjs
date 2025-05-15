@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronsUpDown } from "lucide-react";
 import { UserAvatarSkeleton } from "./nav-skeleton";
 import { User } from "next-auth";
+import UserAvatar from "./UserAvatar";
 
 interface UserAvatarItemProps {
   showChevron?: boolean;
@@ -18,19 +19,7 @@ export default function UserAvatarItem({
 
   return (
     <>
-      <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarImage
-          className=" object-cover"
-          src={user.image || ""}
-          alt={user.name || "User image"}
-        />
-        <AvatarFallback className="rounded-lg">
-          {user.name
-            ?.split(" ")
-            .map((n) => n[0].toLocaleUpperCase())
-            .join("")}
-        </AvatarFallback>
-      </Avatar>
+      <UserAvatar name={user.name!} image={user.image!} />
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className="truncate font-semibold">{user.name}</span>
         <span className="truncate text-xs">{user.email}</span>

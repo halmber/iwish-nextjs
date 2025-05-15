@@ -1,7 +1,4 @@
 "use client";
-
-import { Search, Home, List, Bell, Users } from "lucide-react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavPinned } from "@/components/nav-pinned";
 import { NavUser } from "@/components/nav-user";
@@ -13,56 +10,35 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-
-const data = {
-  navMain: [
-    {
-      title: "Search",
-      url: "#",
-      icon: Search,
-    },
-    {
-      title: "Home",
-      url: "/",
-      icon: Home,
-    },
-    {
-      title: "Lists",
-      url: "/lists",
-      icon: List,
-    },
-    {
-      title: "Friends",
-      url: "/friends",
-      icon: Users,
-    },
-    {
-      title: "Notification",
-      url: "#",
-      icon: Bell,
-      badge: "1",
-    },
-  ],
-  pinned: [
-    {
-      name: "My wishlist",
-      url: "#",
-      // icon: ,
-    },
-    {
-      name: "Daria's wishlist",
-      url: "#",
-      // icon: ,
-    },
-    {
-      name: "Petra's wishlist",
-      url: "#",
-      // icon: ,
-    },
-  ],
-};
+import { useEffect, useMemo, useState } from "react";
+import { getUnreadNotificationCount } from "@/app/(dashboard)/actions";
+import { useSession } from "next-auth/react";
+import { getNavbarBase } from "@/utils/getNavbarBase";
+import { useToast } from "@/hooks/use-toast";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [notificationCount, setNotificationCount] = useState<string>("");
+  const { data: session } = useSession();
+  const { toast } = useToast();
+
+  const data = useMemo(() => {
+    return getNavbarBase(notificationCount);
+  }, [notificationCount]);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    async function fetchCount() {
+      const { succes, data, error } = await getUnreadNotificationCount(
+        session?.user?.id as string,
+      );
+      if (succes) setNotificationCount(data.toString());
+      if (error)
+        toast({ title: "Error", description: error, variant: "destructive" });
+    }
+
+    fetchCount();
+  }, [session?.user?.id]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

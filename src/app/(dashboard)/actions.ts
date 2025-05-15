@@ -3,7 +3,7 @@ import { auth, signOut } from "@/auth";
 import { profileFormSchema, ProfileFormSchemaType } from "./schemas";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { FriendshipStatus } from "@prisma/client";
+import { FriendshipStatus, NotificationType } from "@prisma/client";
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/" });
@@ -109,23 +109,16 @@ export async function sendFriendRequest(receiverId: string) {
       });
 
       // Create a notification for the receiver
-      // const sender = await prisma.user.findUnique({
-      //   where: { id: senderId },
-      //   select: { name: true, email: true },
-      // });
-
-      // const senderName = sender?.name || sender?.email || "Someone";
-
-      // await prisma.notification.create({
-      //   data: {
-      //     userId: receiverId,
-      //     type: "friend_request",
-      //     message: `${senderName} sent you a friend request.`,
-      //     data: { friendshipId: existingFriendship.id },
-      //   },
-      // });
+      await prisma.notifications.create({
+        data: {
+          notifiedId: receiverId,
+          notifierId: senderId,
+          type: NotificationType.FRIEND_REQUEST,
+        },
+      });
 
       revalidatePath("/friends");
+      revalidatePath("/notifications");
       return { success: true, friendship: existingFriendship };
     }
   }
@@ -141,22 +134,15 @@ export async function sendFriendRequest(receiverId: string) {
     });
 
     // Create a notification for the receiver
-    // const sender = await prisma.user.findUnique({
-    //   where: { id: senderId },
-    //   select: { name: true, email: true },
-    // });
+    await prisma.notifications.create({
+      data: {
+        notifiedId: receiverId,
+        notifierId: senderId,
+        type: NotificationType.FRIEND_REQUEST,
+      },
+    });
 
-    // const senderName = sender?.name || sender?.email || "Someone";
-
-    // await prisma.notification.create({
-    //   data: {
-    //     userId: receiverId,
-    //     type: "friend_request",
-    //     message: `${senderName} sent you a friend request.`,
-    //     data: { friendshipId: friendship.id },
-    //   },
-    // });
-
+    revalidatePath("/notifications");
     revalidatePath("/friends");
     return { success: true, friendship };
   } catch (error) {
@@ -200,32 +186,14 @@ export async function acceptFriendRequest(friendshipId: string) {
       data: { status: FriendshipStatus.ACCEPTED },
     });
 
-    // Create a notification for the sender
-    // const receiver = await prisma.user.findUnique({
-    //   where: { id: userId },
-    //   select: { name: true, email: true },
-    // });
-
-    // const receiverName = receiver?.name || receiver?.email || "Someone";
-
-    // await prisma.notification.create({
-    //   data: {
-    //     userId: friendship.senderId,
-    //     type: "friend_accepted",
-    //     message: `${receiverName} accepted your friend request.`,
-    //     data: { friendshipId: friendship.id },
-    //   },
-    // });
-
-    // // Mark the original notification as read
-    // await prisma.notification.updateMany({
-    //   where: {
-    //     userId,
-    //     type: "friend_request",
-    //     data: { path: "$.friendshipId", equals: friendshipId },
-    //   },
-    //   data: { read: true },
-    // });
+    // Create a notification for the notifier
+    await prisma.notifications.create({
+      data: {
+        notifiedId: friendship.senderId,
+        notifierId: friendship.receiverId,
+        type: NotificationType.FRIEND_ACCEPTED,
+      },
+    });
 
     revalidatePath("/friends");
     revalidatePath("/notifications");
@@ -272,15 +240,14 @@ export async function declineFriendRequest(friendshipId: string) {
       data: { status: FriendshipStatus.REJECTED },
     });
 
-    // Mark the notification as read
-    // await prisma.notification.updateMany({
-    //   where: {
-    //     userId,
-    //     type: "friend_request",
-    //     data: { path: "$.friendshipId", equals: friendshipId },
-    //   },
-    //   data: { read: true },
-    // });
+    // Create a notification for the notifier
+    await prisma.notifications.create({
+      data: {
+        notifiedId: friendship.senderId,
+        notifierId: friendship.receiverId,
+        type: NotificationType.FRIEND_REJECTED,
+      },
+    });
 
     revalidatePath("/friends");
     revalidatePath("/notifications");
@@ -446,5 +413,79 @@ export async function searchUsers(query: string) {
   } catch (error) {
     console.error("Error searching users:", error);
     return { error: "Failed to search users. Please try again." };
+  }
+}
+
+export async function getUnreadNotificationCount(userId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id || session.user.id !== userId) {
+      return { error: "You must be logged in to get notifications." };
+    }
+
+    const count = await prisma.notifications.count({
+      where: {
+        notifiedId: userId,
+        read: false,
+      },
+    });
+
+    return { succes: true, data: count };
+  } catch (error) {
+    console.error("Error getting session:", error);
+    return { error: "Failed to get session. Please try again." };
+  }
+}
+
+export async function markNotificationAsRead(notificationId: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw { error: "Unauthorized" };
+  }
+
+  try {
+    await prisma.notifications.update({
+      where: { id: notificationId },
+      data: { read: true },
+    });
+
+    revalidatePath("/notifications");
+    return { succes: true };
+  } catch (error) {
+    console.error("Failed to mark as read:", error);
+    return { error: "Failed to mark as read." };
+  }
+}
+
+export async function markAllNotificationsAsRead() {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Unauthorized" };
+
+  try {
+    await prisma.notifications.updateMany({
+      where: { notifiedId: session.user.id, read: false },
+      data: { read: true },
+    });
+    revalidatePath("/notifications");
+    return { succes: true };
+  } catch (error) {
+    console.error("Failed to mark all as read:", error);
+    return { error: "Failed to mark all as read." };
+  }
+}
+
+export async function deleteAllNotifications() {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Unauthorized" };
+
+  try {
+    await prisma.notifications.deleteMany({
+      where: { notifiedId: session.user.id },
+    });
+    revalidatePath("/notifications");
+    return { succes: true };
+  } catch (error) {
+    console.error("Failed to mark all as read:", error);
+    return { error: "Failed to delete all notifications." };
   }
 }
