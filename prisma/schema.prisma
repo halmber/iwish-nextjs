@@ -22,6 +22,10 @@ model User {
   sentFriendships     Friendship[] @relation("SentFriendships")
   receivedFriendships Friendship[] @relation("ReceivedFriendships")
 
+  // Notifications
+  notified Notifications[] @relation("NotifiedNotification")
+  notifier Notifications[] @relation("NotifierNotification")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -44,6 +48,23 @@ model Friendship {
   receiver User @relation("ReceivedFriendships", fields: [receiverId], references: [id], onDelete: Cascade)
 
   @@unique([senderId, receiverId])
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  FRIEND_REJECTED
+}
+
+model Notifications {
+  id           String      @id @default(cuid())
+  notifiedId   String
+  notified     User        @relation("NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
+  notifierId   String
+  notifier     User        @relation("NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
+  type         NotificationType      
+  read         Boolean     @default(false)
+  createdAt    DateTime    @default(now())
 }
 
 model Account {
