@@ -3,7 +3,7 @@
 import { signIn } from "@/auth";
 import { signInSchema, SignInSchemaType } from "../schemas";
 
-export async function signInAction(data: SignInSchemaType) {
+export async function signInCredentials(data: SignInSchemaType) {
   const parsed = signInSchema.safeParse(data);
 
   if (!parsed.success) {
@@ -26,4 +26,8 @@ export async function signInAction(data: SignInSchemaType) {
   } catch (error) {
     return { success: false, error: `Invalid credentials: ${error}` };
   }
+}
+
+export async function signInGithub() {
+  await signIn("github", { callbackUrl: "/" });
 }

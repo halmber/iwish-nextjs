@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { signInAction } from "./actions";
+import { signInCredentials, signInGithub } from "./actions";
 import {
   Form,
   FormMessage,
@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { signInSchema, SignInSchemaType } from "../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import GithubIcon from "@/components/GithubIcon";
 
 export default function SignIn() {
   const form = useForm<SignInSchemaType>({
@@ -40,7 +41,7 @@ export default function SignIn() {
   async function onSubmit(values: SignInSchemaType) {
     // execute(values);
 
-    const response = await signInAction(values);
+    const response = await signInCredentials(values);
 
     if (response.success) {
       router.push("/");
@@ -115,8 +116,12 @@ export default function SignIn() {
         </Form>
 
         <CardFooter>
-          <Button variant="outline" className="w-full">
-            Sign in with GitHub
+          <Button
+            onClick={() => signInGithub()}
+            variant="outline"
+            className="w-full"
+          >
+            Sign in with GitHub <GithubIcon />
           </Button>
         </CardFooter>
       </Card>

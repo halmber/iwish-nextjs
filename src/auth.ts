@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -47,6 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return null;
       },
     }),
+    GitHub,
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }) {
@@ -71,6 +73,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = token.image as string;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      return "/";
     },
   },
 });
