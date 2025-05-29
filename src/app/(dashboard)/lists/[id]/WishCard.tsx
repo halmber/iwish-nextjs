@@ -1,34 +1,21 @@
-"use client";
-
-import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import type { Wish } from "@prisma/client";
 import DesireLevel from "./DesireLevel";
 import { ExternalLink } from "lucide-react";
-import { WishDialog } from "../WishDialog";
-import { deleteWishAction, editWishAction } from "./actions";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import Image from "next/image";
+import WishMenuDropdown from "./WishMenuDropdown";
 
 interface WishCardProps {
   wish: Wish;
-  listId: string;
 }
 
-export function WishCard({ wish, listId }: WishCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
+export function WishCard({ wish }: WishCardProps) {
   return (
     <Card>
       {wish.imageUrl && (
@@ -67,45 +54,15 @@ export function WishCard({ wish, listId }: WishCardProps) {
         <p className="line-clamp-2 min-h-[2lh] text-sm">
           {wish.description || "No description provided"}
         </p>
+      </CardContent>
 
+      <CardFooter className="flex flex-1 items-center justify-between">
         <p className="text-sm text-end min-h-[1lh]">
           {wish.desiredGiftDate &&
             new Date(wish.desiredGiftDate).toLocaleDateString("uk-UA")}
         </p>
-
-        <div className="flex gap-4">
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your wish.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteWishAction(wish.id)}>
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </CardContent>
-
-      {isEditing && (
-        <WishDialog
-          wish={wish}
-          onClose={() => setIsEditing(false)}
-          listId={listId}
-          onSubmitAction={editWishAction}
-        />
-      )}
+        <WishMenuDropdown wish={wish} />
+      </CardFooter>
     </Card>
   );
 }
