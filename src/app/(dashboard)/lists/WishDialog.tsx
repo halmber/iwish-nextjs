@@ -106,7 +106,7 @@ export function WishDialog({
       desiredGiftDate: wish?.desiredGiftDate
         ? new Date(wish.desiredGiftDate)
         : undefined,
-      imageUrl: wish?.imageUrl || "",
+      imageUrl: wish?.imageUrl || DEFAULT_IMAGE_URL,
     },
     mode: "onTouched",
   });
