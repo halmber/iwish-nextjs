@@ -6,6 +6,7 @@ import { FriendshipStatus } from "@prisma/client";
 import { auth } from "@/auth";
 
 import { WishCard } from "@/app/(dashboard)/lists/[id]/WishCard";
+import { WishCardWrapper } from "@/app/(dashboard)/lists/[id]/WishCardWrapper";
 
 export default async function FriendWishlistPage({
   params,
@@ -100,11 +101,7 @@ export default async function FriendWishlistPage({
           <p className="text-muted-foreground">This wishlist is empty.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {list.wishes.map((wish) => (
-            <WishCard key={wish.id} wish={wish} />
-          ))}
-        </div>
+        <WishCardWrapper wishes={list.wishes} />
       )}
     </div>
   );
