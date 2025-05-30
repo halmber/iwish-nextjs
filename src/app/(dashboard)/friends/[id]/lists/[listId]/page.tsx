@@ -1,18 +1,11 @@
 import { redirect, notFound } from "next/navigation";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ExternalLink, User } from "lucide-react";
+import { User } from "lucide-react";
 import { FriendshipStatus } from "@prisma/client";
 import { auth } from "@/auth";
-import DesireLevel from "@/app/(dashboard)/lists/[id]/DesireLevel";
-import { Badge } from "@/components/ui/badge";
+
+import { WishCard } from "@/app/(dashboard)/lists/[id]/WishCard";
 
 export default async function FriendWishlistPage({
   params,
@@ -109,46 +102,7 @@ export default async function FriendWishlistPage({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {list.wishes.map((wish) => (
-            <Card key={wish.id}>
-              <CardHeader>
-                {wish.url ? (
-                  <a
-                    href={wish.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary hover:underline"
-                  >
-                    <CardTitle>{wish.title}</CardTitle>
-                    <ExternalLink className="size-4 ml-4" />
-                  </a>
-                ) : (
-                  <CardTitle>{wish.title}</CardTitle>
-                )}
-
-                <CardDescription className="line-clamp-2 min-h-[2lh] text-muted-foreground">
-                  {wish.description || "No description provided"}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <DesireLevel desireLvl={wish.desireLvl} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Badge>
-                      {wish.price} {wish.currency}
-                    </Badge>
-                    {wish.desiredGiftDate && (
-                      <div>
-                        <span className="font-medium">Desired by:</span>{" "}
-                        {new Date(wish.desiredGiftDate).toLocaleDateString()}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <WishCard key={wish.id} wish={wish} />
           ))}
         </div>
       )}

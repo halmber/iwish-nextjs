@@ -10,12 +10,14 @@ import DesireLevel from "./DesireLevel";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import WishMenuDropdown from "./WishMenuDropdown";
+import { Badge } from "@/components/ui/badge";
 
 interface WishCardProps {
   wish: Wish;
+  ownWish?: boolean;
 }
 
-export function WishCard({ wish }: WishCardProps) {
+export function WishCard({ wish, ownWish }: WishCardProps) {
   return (
     <Card>
       {wish.imageUrl && (
@@ -43,9 +45,11 @@ export function WishCard({ wish }: WishCardProps) {
               </a>
             )}
           </div>
-          <span className="text-neutral-500">
-            {wish.price} {wish.currency}
-          </span>
+          {wish.price !== 0 && (
+            <Badge className="text-xs text-neutral-500">
+              {wish.price} {wish.currency}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
 
@@ -61,7 +65,7 @@ export function WishCard({ wish }: WishCardProps) {
           {wish.desiredGiftDate &&
             new Date(wish.desiredGiftDate).toLocaleDateString("uk-UA")}
         </p>
-        <WishMenuDropdown wish={wish} />
+        {ownWish && <WishMenuDropdown wish={wish} />}
       </CardFooter>
     </Card>
   );

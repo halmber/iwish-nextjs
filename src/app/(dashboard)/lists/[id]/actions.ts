@@ -3,8 +3,16 @@
 import { prisma } from "@/lib/prisma";
 import { wishSchema, WishSchemaType } from "../schemas";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function editWishAction(data: WishSchemaType, id: string) {
+  const session = await auth();
+  if (!session || !session?.user?.id)
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+
   const { success, data: safeData, error } = wishSchema.safeParse(data);
 
   if (!success) {

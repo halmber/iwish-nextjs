@@ -36,7 +36,7 @@ export default async function ListPage({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {list.wishes.map((wish) => (
-          <WishCard key={wish.id} wish={wish} />
+          <WishCard key={wish.id} wish={wish} ownWish />
         ))}
       </div>
     </div>
