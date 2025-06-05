@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import type { Wish } from "@prisma/client";
 import DesireLevel from "@/components/DesireLevel";
-import { ExternalLink } from "lucide-react";
+import { Check, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import WishMenuDropdown from "@/components/WishMenuDropdown";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +19,16 @@ interface WishCardProps {
 
 export function WishCard({ wish, ownWish }: WishCardProps) {
   return (
-    <Card>
+    <Card className="relative">
+      {wish.fulfilled && (
+        <Badge
+          variant="outline"
+          className="p-0 absolute top-4 left-4 text-xl z-10 md:text-3xl"
+        >
+          <Check className="drop-shadow-3xl text-green-500" />
+        </Badge>
+      )}
+
       {wish.imageUrl && (
         <div className="relative w-full h-40 rounded-t-xl">
           <Image
@@ -31,6 +40,7 @@ export function WishCard({ wish, ownWish }: WishCardProps) {
           />
         </div>
       )}
+
       <CardHeader>
         <CardTitle className="flex justify-between">
           <div className="flex items-center gap-4">
@@ -46,7 +56,7 @@ export function WishCard({ wish, ownWish }: WishCardProps) {
             )}
           </div>
           {wish.price !== 0 && (
-            <Badge className="text-xs text-neutral-500">
+            <Badge className="text-xs dark:text-neutral-500">
               {wish.price} {wish.currency}
             </Badge>
           )}

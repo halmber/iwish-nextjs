@@ -4,11 +4,12 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import DropdownMenuWrapper from "@/components/ui/DropdownMenuWrapper";
 import { Wish } from "@prisma/client";
-import { Pencil, Trash2 } from "lucide-react";
+import { Check, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
   deleteWishAction,
   editWishAction,
+  toggleFulfilled,
 } from "@/app/(dashboard)/lists/[id]/actions";
 import { WishDialog } from "@/components/WishDialog";
 
@@ -18,6 +19,22 @@ export default function WishMenuDropdown({ wish }: { wish: Wish }) {
   return (
     <>
       <DropdownMenuWrapper>
+        <ConfirmDialog
+          trigger={
+            <DropdownMenuItem
+              className="flex items-center gap-2"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <Check size={16} />
+              <span>{`${wish.fulfilled ? "Unm" : "M"}ark`} as fulfilled</span>
+            </DropdownMenuItem>
+          }
+          description="Mark the wish as fulfilled. You can change this later."
+          onConfirm={() =>
+            toggleFulfilled({ state: wish.fulfilled, id: wish.id })
+          }
+        />
+
         <DropdownMenuItem onClick={() => setIsEditing((prev) => !prev)}>
           <Pencil />
           <span>Edit</span>
