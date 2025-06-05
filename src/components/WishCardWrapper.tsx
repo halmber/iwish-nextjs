@@ -1,7 +1,7 @@
 "use client";
 
 import { Wish } from "@prisma/client";
-import { WishCard } from "./WishCard";
+import { WishCard } from "@/components/WishCard";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";

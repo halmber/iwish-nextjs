@@ -2,9 +2,12 @@
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteListAction, editWishlistAction } from "./actions";
+import {
+  deleteListAction,
+  editWishlistAction,
+} from "@/app/(dashboard)/lists/actions";
 import { useState } from "react";
-import { WishlistDialog } from "./WishlistDialog";
+import { WishlistDialog } from "@/components/WishlistDialog";
 import { List } from "@prisma/client";
 import DropdownMenuWrapper from "@/components/ui/DropdownMenuWrapper";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";

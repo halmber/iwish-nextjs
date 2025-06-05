@@ -3,7 +3,7 @@ import { NotificationItem } from "@/components/NotificationItem";
 import { prisma } from "@/lib/prisma";
 import { BellIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { NotificationsDropdown } from "./NotificationsDropdownю";
+import { NotificationsDropdown } from "@/components/NotificationsDropdown";
 
 export default async function NotificationsPage() {
   const session = await auth();

@@ -9,7 +9,7 @@ import {
 import type { List } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Eye, EyeOff, ListChecks } from "lucide-react";
-import ListMenuDropdown from "./ListMenuDropdown";
+import ListMenuDropdown from "@/components/ListMenuDropdown";
 import { VISIBILITY } from "@/lib/constants";
 
 interface ListCardProps {

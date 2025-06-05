@@ -1,8 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import CreateWishBtn from "./CreateWishBtn";
-import { WishCardWrapper } from "./WishCardWrapper";
+import { CreateWishBtn } from "@/components/CreateWishBtn";
+import { WishCardWrapper } from "@/components/WishCardWrapper";
 
 export default async function ListPage({
   params,

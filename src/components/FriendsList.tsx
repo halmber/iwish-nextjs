@@ -17,7 +17,7 @@ import {
   acceptFriendRequest,
   declineFriendRequest,
   removeFriend,
-} from "../actions";
+} from "@/app/(dashboard)/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { FRIENDS_TABS } from "@/lib/constants";

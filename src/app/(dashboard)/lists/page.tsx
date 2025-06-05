@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { ListCard } from "./ListCard";
-import CreateWishlistBtn from "./CreateWishlistBtn";
-import CreateWishBtn from "./[id]/CreateWishBtn";
+import { ListCard } from "@/components/ListCard";
+import { CreateWishlistBtn } from "@/components/CreateWishlistBtn";
+import { CreateWishBtn } from "@/components/CreateWishBtn";
 
 export default async function Lists() {
   const session = await auth();

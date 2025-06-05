@@ -6,8 +6,11 @@ import DropdownMenuWrapper from "@/components/ui/DropdownMenuWrapper";
 import { Wish } from "@prisma/client";
 import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { deleteWishAction, editWishAction } from "./actions";
-import { WishDialog } from "../WishDialog";
+import {
+  deleteWishAction,
+  editWishAction,
+} from "@/app/(dashboard)/lists/[id]/actions";
+import { WishDialog } from "@/components/WishDialog";
 
 export default function WishMenuDropdown({ wish }: { wish: Wish }) {
   const [isEditing, setIsEditing] = useState(false);

@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { FriendshipStatus } from "@prisma/client";
 import { auth } from "@/auth";
-import { FriendsList } from "./FriendsList";
-import { UserSearch } from "./UserSearch";
+import { FriendsList } from "@/components/FriendsList";
+import { UserSearch } from "@/components/UserSearch";
 import { getFriends } from "../actions";
 
 export default async function FriendsPage() {

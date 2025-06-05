@@ -4,9 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { User } from "lucide-react";
 import { FriendshipStatus } from "@prisma/client";
 import { auth } from "@/auth";
-
-import { WishCard } from "@/app/(dashboard)/lists/[id]/WishCard";
-import { WishCardWrapper } from "@/app/(dashboard)/lists/[id]/WishCardWrapper";
+import { WishCardWrapper } from "@/components/WishCardWrapper";
 
 export default async function FriendWishlistPage({
   params,

@@ -6,10 +6,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import type { Wish } from "@prisma/client";
-import DesireLevel from "./DesireLevel";
+import DesireLevel from "@/components/DesireLevel";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
-import WishMenuDropdown from "./WishMenuDropdown";
+import WishMenuDropdown from "@/components/WishMenuDropdown";
 import { Badge } from "@/components/ui/badge";
 
 interface WishCardProps {

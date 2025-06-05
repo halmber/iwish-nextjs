@@ -2,12 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { WishlistDialog } from "./WishlistDialog";
-import { createWishlistAction } from "./actions";
+import { WishDialog } from "@/components/WishDialog";
+import { createWishAction } from "@/app/(dashboard)/lists/[id]/actions";
 
-export default function CreateWishlistBtn() {
+export function CreateWishBtn({ listId }: { listId?: string }) {
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <Button
@@ -15,14 +14,15 @@ export default function CreateWishlistBtn() {
           setOpen((prev) => !prev);
         }}
       >
-        New wishlist
+        New wish
       </Button>
 
       {open && (
-        <WishlistDialog
-          wishlist={null}
+        <WishDialog
+          wish={null}
+          listId={listId}
           onClose={() => setOpen((prev) => !prev)}
-          onSubmitAction={createWishlistAction}
+          onSubmitAction={createWishAction}
         />
       )}
     </>

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import type { Wish } from "@prisma/client";
-import DesireLevel from "./[id]/DesireLevel";
+import DesireLevel from "@/components/DesireLevel";
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { wishSchema, WishSchemaType } from "./schemas";
+import { wishSchema, WishSchemaType } from "@/app/(dashboard)/lists/schemas";
 import {
   Popover,
   PopoverContent,
@@ -43,7 +43,7 @@ import { BUCKETS, currencies, DEFAULT_IMAGE_URL } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
-import { getListsOptions } from "./actions";
+import { getListsOptions } from "@/app/(dashboard)/lists/actions";
 import { ImageUploader } from "@/components/ImageUploader";
 import { fileUploadService } from "@/lib/fileUploadService";
 import { useSession } from "next-auth/react";
