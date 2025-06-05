@@ -1,8 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { WishCard } from "./WishCard";
 import { auth } from "@/auth";
-import CreateWishBtn from "./CreateWishBtn";
+import { CreateWishBtn } from "@/components/CreateWishBtn";
+import { WishCardWrapper } from "@/components/WishCardWrapper";
 
 export default async function ListPage({
   params,
@@ -34,11 +34,7 @@ export default async function ListPage({
         <CreateWishBtn listId={list.id} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {list.wishes.map((wish) => (
-          <WishCard key={wish.id} wish={wish} listId={list.id} />
-        ))}
-      </div>
+      <WishCardWrapper wishes={list.wishes} ownWish />
     </div>
   );
 }

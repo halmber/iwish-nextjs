@@ -26,7 +26,10 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { wishlistSchema, WishlistSchemaType } from "./schemas";
+import {
+  wishlistSchema,
+  WishlistSchemaType,
+} from "@/app/(dashboard)/lists/schemas";
 import { List } from "@prisma/client";
 import { VISIBILITY } from "@/lib/constants";
 

@@ -122,6 +122,7 @@ model Wish {
   desireLvl       Int
   price           Float
   currency        String
+  fulfilled       Boolean @default(false)
   url             String?
   description     String?
   desiredGiftDate String?

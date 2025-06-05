@@ -10,7 +10,10 @@
     "db:migrate": "npx prisma migrate dev",
     "db:studio": "npx prisma studio",
     "db:reset": "npx prisma migrate reset && npx prisma migrate dev",
-    "db:seed": "npx prisma db seed"
+    "db:seed": "npx prisma db seed",
+    "docker:dev": "docker compose up --build",
+    "docker:start": "docker compose up",
+    "docker:clean": "docker system prune -f"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

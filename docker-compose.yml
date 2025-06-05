@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: iwish-app-dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:admin@postgres-db:5432/iwish
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres-db
+    command: >
+      sh -c "
+        npx prisma generate &&
+        npx prisma migrate dev && 
+        npm run dev
+      "
+    # 'npx prisma migrate dev' added without testing, because run it in container
+
+  postgres-db:
+    image: postgres:15
+    container_name: iwish-db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: iwish
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
